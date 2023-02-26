@@ -7,7 +7,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/:username", (req, res) => {
-    if (req.params.username == "favicon.ico") return;
+    if (req.params.username.startsWith("favicon.")) return;
 
     console.log(`${new Date()} | ${req.params.username}`);
     res.sendFile(__dirname + "/username.html")
