@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>username</title>
+    <script defer>
+        async function fetchData(username) {
+            const res = await fetch(`https://api.ivr.fi/v2/twitch/user/${username}`);
+            if (!res.ok) {
+                return;
+            }
+            
+            const data = await res.json(); 
+            return data;
+        }
+
+        function updateView(data) {
+            document.getElementById("avatar").src = data.logo
+            document.getElementById("username").innerText = data.displayName
+            document.getElementById("status").innerText = (data.banned ? " is " : " is not ") + "banned!"
+            document.getElementById("status").classList.add((data.banned ? "red" : "green"))
+            if (data.banned) {
+                document.getElementById("reason").innerText = `(${data.banReason})`
+                document.getElementById("reason").style.visibility = "visible"
+            }
+
+            document.getElementById("partner-val").innerText = (data.roles.isPartner ? "Yes" : "No")
+            document.getElementById("partner-val").classList.add((data.roles.isPartner ? "green" : "red"))
+            document.getElementById("affiliate-val").innerText = (data.roles.isAffiliate ? "Yes" : "No")
+            document.getElementById("affiliate-val").classList.add((data.roles.isAffiliate ? "green" : "red"))
+
+            if (data.roles.isStaff) {
+                document.getElementById("staff-badge").style.display = "block";
+            } else if (data.roles.isStaff === false) {
+                document.getElementById("staff-badge").style.display = "block";
+                document.getElementById("staff-badge").src = "https://static-cdn.jtvnw.net/emoticons/v2/62835/default/dark/3.0"
+            }
+        }
+        const username = window.location.pathname.split("/")[1];
+        document.title = username;
+
+        fetchData(username)
+            .then(data => {
+                if (data) {
+                    updateView(data)
+                } else {
+                    document.getElementById("page").innerHTML = "<h2>User Not Found!</h2>"
+                }
+                document.getElementById("page").style.visibility = "visible"
+            })
+        
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            color: #d6d6d6;
+            font-family: Roboto,sans-serif;
+            font-weight: 300;
+        }
+
+        .green {
+            color: #97D746
+        }
+
+        .red {
+            color: #E84242
+        }
+
+        .purple {
+            color: #D187FF
+        }
+
+        body {
+            background-color: #2d2631;
+        }
+        
+        #page {    
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .profile-container, .banstatus-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .username-conatiner, .roles-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;    
+        }
+
+        #username {
+            margin-top: 5px;
+        }
+
+        #staff-badge {
+            margin-right: 5px;
+            margin-top: 3px;
+        }
+        
+        .roles-container {
+            margin-top: 20px;
+        }
+
+        .role {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <noscript>
+        <div style="position: fixed; top: 0px; left: 0px; z-index: 30000000; 
+                    height: 100%; width: 100%; background-color: #FFFFFF">
+            <p style="margin-left: 10px">JavaScript is not enabled.</p>
+        </div>
+    </noscript>
+    <div id="page" style="visibility: hidden;">
+        <div class="profile-container">
+            <img 
+                id="avatar"
+                src="https://static-cdn.jtvnw.net/user-default-pictures-uv/ebe4cd89-b4f4-4cd9-adac-2f30151b4209-profile_image-600x600.png"
+                alt="twitch profile picture"
+                height="300px"
+            >
+            <div class="username-conatiner">
+                <img 
+                    id="staff-badge"
+                    src="https://static-cdn.jtvnw.net/badges/v1/d97c37bd-a6f5-4c38-8f57-4e4bef88af34/3" ]
+                    alt="staff badge"
+                    height="25px";
+                    style="display: none;"
+                >
+                <h1 id="username">
+                    Forsen
+                </h1>
+            </div>
+        </div>
+        <div class="banstatus-container">
+            <h2 id="status">status</h2>
+            <h3 id="reason" class="red" style="visibility: hidden">reason</h3>
+        </div>
+        <div class="roles-container">
+            <div class="partner role">
+                Partner: 
+                <span id="partner-val"></span>
+            </div>
+            <div class="affiliate role">
+                Affiliate: 
+                <span id="affiliate-val"></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitch Ban Check</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            color: #d6d6d6;
+            font-family: Roboto,sans-serif;
+            font-weight: 300;
+        }
+        
+        body {
+            background-color: #2d2631;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .search-container {
+            margin: 20px;
+            display: flex;
+        }
+
+        #username-input {
+            background-color: #7B4DC736;
+            border: none;
+            border-top: #7B4DC7 solid 2px;
+            border-left: #7B4DC7 solid 2px;
+            border-bottom: #7B4DC7 solid 2px;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            height: 40px;
+            width: 350px;
+            text-indent:20px;
+            color: rgb(230, 230, 230);
+            font-size: 15px;
+        }
+        #username-input:focus {
+            outline: none;
+
+        }
+        #username-input::-webkit-input-placeholder {
+            color: #7B4DC7
+        }
+        #username-input:-moz-placeholder {
+            color: #7B4DC7
+        }
+
+        #search-button {
+            width: 100px;
+            background-color: #7B4DC7;
+            border: none;
+            color: white;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition-duration: 0.3s;
+        }
+        #search-button:hover {
+            filter: brightness(1.2);
+        }
+
+        #search-button:disabled {
+            filter: brightness(0.7);
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+    <h2>are they banned?</h2>
+    <div class="search-container">
+        <input
+            type="text"
+            name="username"
+            id="username-input"
+            placeholder="Username"
+            autocomplete="off"
+            spellcheck="false"
+        >
+        <button id="search-button" onclick="redirect()">SEARCH</button>
+    </div>
+</body>
+<script defer>
+    function redirect() {
+        window.location.href = `./${document.getElementById("username-input").value}`
+    }
+    
+    function checkValidUsername(user) {
+        const reg = /^[a-zA-Z0-9_]{1,25}$/;
+        return user.match(reg) == null ? false : true
+    }
+
+    document.getElementById("search-button").disabled = true;
+
+    document.getElementById("username-input").addEventListener("input", e => {
+        document.getElementById("search-button").disabled = !checkValidUsername(e.target.value)
+    })
+
+    document.getElementById("username-input").addEventListener("keypress", e => {
+        if (e.key === "Enter") {
+            event.preventDefault();
+            redirect();
+        }
+    })
+</script>
+</html>
