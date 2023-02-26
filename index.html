@@ -107,7 +107,7 @@
     document.getElementById("username-input").addEventListener("keypress", e => {
         if (e.key === "Enter") {
             event.preventDefault();
-            redirect();
+            if (checkValidUsername(document.getElementById("username-input").value)) redirect();
         }
     })
 </script>
