@@ -3,6 +3,7 @@ const app = express();
 const PORT = 2555;
 
 app.get("/", (req, res) => {
+    console.log(`${new Date()} | /`);
     res.sendFile(__dirname + "/index.html")
 })
 
@@ -14,7 +15,7 @@ app.get("/:username", (req, res) => {
 })
 
 app.get("*", (req, res) => {
-    console.log(`${new Date()} | /`);
+    console.log(`${new Date()} | 404`);
     res.sendFile(__dirname + "/404.html")
 })
 
