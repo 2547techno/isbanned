@@ -7,7 +7,7 @@
     <title>username</title>
     <script defer>
         async function fetchData(username) {
-            const res = await fetch(`https://api.ivr.fi/v2/twitch/user/${username}`);
+            const res = await fetch(`https://api.ivr.fi/v2/twitch/user?login=${encodeURIComponent(username)}`);
             if (!res.ok) {
                 return;
             }
@@ -43,8 +43,8 @@
 
         fetchData(username)
             .then(data => {
-                if (data) {
-                    updateView(data)
+                if (data.length > 0) {
+                    updateView(data[0])
                 } else {
                     document.getElementById("page").innerHTML = "<h2>User Not Found!</h2>"
                 }
